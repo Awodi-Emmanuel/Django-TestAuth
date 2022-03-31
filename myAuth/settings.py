@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -134,3 +135,58 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 100,
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
+
+LOGS_DIR = os.path.join(BASE_DIR, "logs")
+try:
+    os.mkdir(LOGS_DIR)
+except:
+    pass
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "standard": {
+            "format": "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s - %(pathname)s",
+            "datefmt": "%d/%b/%Y %H:%M:%S",
+        }
+    },
+    "handlers": {
+        "default": {
+            "level": "DEBUG",
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": os.path.join(LOGS_DIR, "default.log"),
+            "formatter": "standard",
+        },
+        "handler_error": {
+            "level": "ERROR",
+            "class": "logging.FileHandler",
+            "filename": os.path.join(LOGS_DIR, "error.log"),
+            "formatter": "standard",
+        },
+        "console": {"class": "logging.StreamHandler", "formatter": "standard"},
+        "celery": {
+            "level": "DEBUG",
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": os.path.join(LOGS_DIR, "celery.log"),
+            "formatter": "standard",
+        },
+    },
+    "loggers": {
+        "django": {"handlers": ["handler_error"], "level": "ERROR", "propagate": True},
+        "": {"handlers": ["default", "console"], "level": "DEBUG", "propagate": True},
+        "celery": {
+            "handlers": ["celery", "console"],
+            "level": "DEBUG",
+            "propagate": True,
+        },
+    },
+}
