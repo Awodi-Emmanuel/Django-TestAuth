@@ -12,4 +12,15 @@ class TempCode(AbstractTempCode):
     
   @classmethod
   
-  def get_string_code() 
+  def get_string_code(cls, code_type: str):
+    if code_type == 'signup':
+      return "12345"
+    else:
+      return 'ab243d-ef1452'
+    
+class UserSettings(AbstractUserSettings):
+  pass
+
+class Profile(AbstractProfile):
+  pass    
+     

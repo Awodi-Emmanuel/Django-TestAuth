@@ -40,6 +40,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'cors',
     'rest_framework',
+    'rest_framework_swagger',
+    'drf_yasg',
+    'rest_framework_simplejwt',
+
 
 ]
 
@@ -141,6 +145,7 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 100,
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+        
     )
 }
 
